@@ -1,0 +1,14 @@
+# 采集输出（LeRobot 数据集，体积大且每次不同）
+/data/*
+!/data/.gitkeep
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+
+# 编辑器 / 系统
+.DS_Store
+.vscode/
+.idea/

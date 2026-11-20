@@ -1,0 +1,63 @@
+# 双臂 piper 主从遥操采集配置
+# 说明:
+# - arms 下的 leader/follower 是 CAN 接口名,由 scripts/setup_can.sh 按 USB 口固定命名。
+# - joint_sign / joint_offset_deg 按“从臂安装方向”逐关节标定:
+#     follower_cmd = signalign * leader_deg + joint_offset_deg
+# - 单位:关节 deg,夹爪 mm。
+
+fps: 30              # 数据集帧率(录制线程)
+control_hz: 200      # 主从控制频率
+task: "bimanual pick and place"   # 写入数据集的任务描述
+watchdog_timeout_s: 0.5           # 主臂反馈超时→从臂停住
+speed_rate: 100                   # 下发速度百分比(0-100)
+installation_pos: 0               # 0x00 水平正装 / 0x01 侧装(按实际安装调整)
+
+dataset:
+  repo_id: "local/piper_bimanual"
+  out_root: "data"          # 相对本目录;每次采集自动创建 data/<repo_id>_<时间戳>
+  use_videos: true
+  image_writer_threads: 4
+  robot_type: "bimanual_piper"
+
+limits:
+  max_joint_speed_deg_s: 180.0    # 主从指令斜率限制
+  soft_margin_deg: 2.0            # 软限位余量
+  gripper_max_mm: 100.0           # 夹爪行程上限,超出会截断
+
+arms:
+  left:
+    leader: "can_leader_left"
+    follower: "can_follower_left"
+    joint_sign: [1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+    joint_offset_deg: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+    gripper_sign: 1.0
+    gripper_zero_mm: 0.0
+    gripper_effort_nm: 1.0        # 夹爪力矩 0-5 N·m
+  right:
+    leader: "can_leader_right"
+    follower: "can_follower_right"
+    joint_sign: [1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+    joint_offset_deg: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+    gripper_sign: 1.0
+    gripper_zero_mm: 0.0
+    gripper_effort_nm: 1.0
+
+cameras:
+  left_wrist:
+    serial: "327122071526"
+    width: 640
+    height: 480
+    fps: 30
+    rotation: 0                   # 腕部相机朝向不同时可设 90/180/270
+  right_wrist:
+    serial: "327122072690"
+    width: 640
+    height: 480
+    fps: 30
+    rotation: 0
+  front:
+    serial: "335622071161"
+    width: 640
+    height: 480
+    fps: 30
+    rotation: 0

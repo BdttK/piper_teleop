@@ -1,0 +1,4 @@
+# lerobot / piper_sdk / pyrealsense2 / torch 由 install.sh 安装,这里只放补充依赖
+pyyaml>=6.0
+# lerobot v0.3.3 的 video_utils 依赖旧版 PyAV API;av>=15 会报 AVRational 错误
+av>=14.2,<14.3
