@@ -141,7 +141,10 @@ class PiperArm:
         self.piper.MotionCtrl_1(0x01, 0x00, 0x00)
 
     def recover(self) -> None:
-        """解除急停状态(MotionCtrl_1 emergency_stop=0x02 恢复)。"""
+        """清除急停/错误 —— 注意:固件复位会让机械臂立刻失电下坠。
+
+        不要在正常启动路径里调用;仅在人已扶住机械臂或它已落在桌面上时使用。
+        """
         self.piper.MotionCtrl_1(0x02, 0x00, 0x00)
 
 

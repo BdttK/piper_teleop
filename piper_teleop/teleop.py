@@ -171,12 +171,13 @@ class BimanualTeleop:
             side_teleop.leader.disable(3.0)
 
     def start_following(self) -> None:
-        """解除急停、重置指令斜率并开始主从跟随。"""
+        """重置指令斜率并开始主从跟随。
+
+        不调用 ``recover()``:那条指令是固件的 ResetPiper,会让从臂瞬间失电下坠。
+        从臂应由 ``enable_followers()`` 正常使能;若它锁存在急停,使能会失败并在
+        控制循环里被检测到,而不是靠这里静默复位。
+        """
         for side_teleop in self.sides.values():
-            try:
-                side_teleop.follower.recover()
-            except Exception:
-                logger.debug("recover 异常", exc_info=True)
             side_teleop.reset()
         self.following = True
 
